@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.10.xsd">
+
+    <changeSet id="20231208-1" author="yigit">
+        <createTable tableName="product">
+            <column name="id" type="bigint" autoIncrement="true" startWith="1">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="category_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="address"
+                    type="varchar(255)"/>
+            <column name="price" type="Double">
+                <constraints nullable="false"/>
+            </column>
+            <column name="explanation" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20231208-2" author="yigit">
+
+        <createTable tableName="category">
+            <column name="id" type="bigint" autoIncrement="true" startWith="1">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="name" type="varchar(255)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+
+        </createTable>
+    </changeSet>
+
+    <changeSet  author="yigit"  id="20231208-3">
+        <addForeignKeyConstraint  baseColumnNames="category_id"
+                                  baseTableName="product"
+                                  baseTableSchemaName="public"
+                                  constraintName="fk_category_id"
+                                  referencedColumnNames="id"
+                                  referencedTableName="category"
+                                  referencedTableSchemaName="public"
+                                  validate="true"/>
+    </changeSet>
+
+
+
+
+    <changeSet id="20231210_1" author="atapolat">
+        <insert tableName="category">
+            <column name="name" value="Kitap" />
+        </insert>
+    </changeSet>
+    <changeSet id="20231210_2" author="atapolat">
+        <insert tableName="category">
+            <column name="name" value="Elektronik" />
+        </insert>
+    </changeSet>
+    <changeSet id="20231210_3" author="atapolat">
+        <insert tableName="category">
+            <column name="name" value="Giyim" />
+        </insert>
+    </changeSet>
+
+    <changeSet id="20231210_4" author="atapolat">
+        <insert tableName="product">
+            <column name="category_id" value="1" />
+            <column name="name" value="Paranın Psikolojisi" />
+            <column name="price" value="200" />
+            <column name="explanation" value="Ödüllü yazar Morgan Housel Paranın Psikolojisi'nde, insanların paraya ilişkin düşünce biçimlerini ele alan 19 kısa hikayeye yer veriyor ve hayatın en önemli yönlerinden biri olan para konusunu nasıl daha iyi anlayabileceğimize dair önemli dersler sunuyor." />
+        </insert>
+    </changeSet>
+    <changeSet id="20231210_5" author="atapolat">
+        <insert tableName="product">
+            <column name="category_id" value="2" />
+            <column name="name" value="iPhone 15 Pro" />
+            <column name="price" value="74.499" />
+            <column name="explanation" value="iPhone 15 Pro 256 Gb Akıllı Telefon Mavi Titanium" />
+        </insert>
+    </changeSet>
+    <changeSet id="20231210_6" author="atapolat">
+        <insert tableName="product">
+            <column name="category_id" value="3" />
+            <column name="name" value="Sweatshirt" />
+            <column name="price" value="599.99" />
+            <column name="explanation" value="Mavi Logo Baskılı Bol Rahat Kesim Kapüşşonlu Lacivert Sweatshirt" />
+        </insert>
+    </changeSet>
+
+
+</databaseChangeLog>
