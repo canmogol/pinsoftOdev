@@ -1,11 +1,8 @@
 package com.example.odev.business.auth;
 
-import com.example.odev.business.concretes.UserManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -19,14 +16,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
-
-    @Bean
-    public AuthenticationManager authenticationManager(UserManager userManager, HttpSecurity httpSecurity, NoOpPasswordEncoder noOpPasswordEncoder) throws Exception {
-        AuthenticationManagerBuilder authenticationManagerBuilder = httpSecurity.getSharedObject(AuthenticationManagerBuilder.class);
-        authenticationManagerBuilder.userDetailsService(userManager).passwordEncoder(noOpPasswordEncoder);
-
-        return authenticationManagerBuilder.build();
-    }
 
     private static final String[] AUTH_WHITELIST = {
             "/v2/api-docs",
@@ -44,17 +33,16 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http,
-            AuthenticationManager authenticationManager,
             JwtAuthorizationFilter jwtAuthenticationFilter
     ) throws Exception {
         http.authorizeHttpRequests(
                         requests ->
                                 requests.requestMatchers("/api/auth/login").permitAll()
+                                        .requestMatchers(AUTH_WHITELIST).permitAll()
                                         .requestMatchers(HttpMethod.OPTIONS).permitAll()
                                         .anyRequest().authenticated()
                 )
                 .csrf(AbstractHttpConfigurer::disable)
-                .authenticationManager(authenticationManager)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .logout(LogoutConfigurer::permitAll);
         return http.build();

@@ -1,5 +1,7 @@
 package com.example.odev.webApiControllers;
 
+import com.example.odev.Entity.User;
+import com.example.odev.Repository.UserRepository;
 import com.example.odev.business.auth.JwtUtil;
 import com.example.odev.business.requests.LoginRequest;
 import com.example.odev.business.responses.ErrorResponse;
@@ -8,11 +10,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,7 +21,7 @@ import java.util.List;
 public class AuthController {
 
     @Autowired
-    private AuthenticationManager authenticationManager;
+    private UserRepository userRepository;
     @Autowired
     private JwtUtil jwtUtil;
 
@@ -31,10 +29,10 @@ public class AuthController {
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseEntity login(@RequestBody LoginRequest loginRequest) {
         try {
-            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
-            String username = authentication.getName();
-            List<String> authorities = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
-            String token = jwtUtil.createToken(username, authorities);
+            User user = userRepository.findUserByUsernameAndPassword(loginRequest.getUsername(), loginRequest.getPassword());
+            String username = user.getUsername();
+            List<String> upperCase = List.of(user.getRole().getName().toUpperCase());
+            String token = jwtUtil.createToken(username, upperCase);
             LoginResponse loginResponse = new LoginResponse(username, token);
 
             return ResponseEntity.ok(loginResponse);
