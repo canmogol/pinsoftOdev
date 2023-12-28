@@ -33,7 +33,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http,
-            JwtAuthorizationFilter jwtAuthenticationFilter
+            JwtAuthenticationFilter jwtAuthenticationFilter
     ) throws Exception {
         http.authorizeHttpRequests(
                         requests ->

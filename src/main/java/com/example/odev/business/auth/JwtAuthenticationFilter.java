@@ -23,14 +23,14 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class JwtAuthorizationFilter extends OncePerRequestFilter {
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired
     private final JwtUtil jwtUtil;
     @Autowired
     private final ObjectMapper objectMapper;
 
-    public JwtAuthorizationFilter(JwtUtil jwtUtil, ObjectMapper objectMapper) {
+    public JwtAuthenticationFilter(JwtUtil jwtUtil, ObjectMapper objectMapper) {
         this.jwtUtil = jwtUtil;
         this.objectMapper = objectMapper;
     }
